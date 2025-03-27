@@ -1,0 +1,59 @@
+:root {
+  --accent: #eb672a;
+  --bg: #07080b;
+  --text: #e0e0e0;
+  --card: #17171e;
+  --border: #222222;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --width: 1000px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 8px var(--shadow);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.btn {
+  background: var(--accent);
+  color: white;
+  padding: 0.5rem 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.3s ease-in-out;
+}
+
+.parent {
+  width: 100%;
+  .child {
+    max-width: var(--width);
+    margin: 0px auto;
+    height: 100%;
+    position: relative;
+    padding: 0px 0.5rem;
+  }
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+}
+
+.disable {
+  animation: disable 0.3s ease-in-out forwards;
+}
+
+
