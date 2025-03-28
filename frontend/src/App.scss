@@ -1,6 +1,6 @@
 :root {
-  --accent: #eb672a;
-  --bg: #07080b;
+  --accent: #2aa4eb;
+  --bg: #07090c;
   --text: #e0e0e0;
   --card: #17171e;
   --border: #222222;
@@ -13,7 +13,9 @@ body {
   color: var(--text);
 }
 
-
+*{
+color: var(--text);
+}
 
 .card {
   background: var(--card);
@@ -26,6 +28,17 @@ body {
 .btn {
   background: var(--accent);
   color: white;
+  padding: 0.5rem 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.3s ease-in-out;
+}
+.btn2 {
+  background: transparent;
+  color: white;
+  border: 1px solid var(--border);
   padding: 0.5rem 18px;
   border: none;
   border-radius: 6px;
@@ -54,6 +67,10 @@ body {
 
 .disable {
   animation: disable 0.3s ease-in-out forwards;
+}
+
+input {
+  background: transparent;
 }
 
 

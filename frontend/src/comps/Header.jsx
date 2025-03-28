@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -6,12 +7,28 @@ import React from 'react'
 
 
 
+const Header = (props) => {
+
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/");
+  }
+
+  
 
 
-const Header = () => {
+
+
   return (
-    <div className='py-4 border-b border-[var(--border)]'>
-      <h2 className='text-2xl font-bold'>Dashbaord</h2>
+    <div className='py-4 border-b w-full border-[var(--border)] flex justify-between items-center'>
+      <h2 className='text-2xl font-bold'>{props.title}</h2>
+
+     <div className='flex gap-4'>
+     <Link to={props.link} className="btn2" >{props.btnText}</Link>
+     <button className="btn" onClick={handleLogout}>Logout</button>
+     </div>
     </div>
   )
 }

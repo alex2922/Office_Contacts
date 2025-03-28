@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header from "../comps/Header";
 
 const signup = () => {
   const [data, setData] = useState({
@@ -24,11 +25,11 @@ const signup = () => {
   };
   return (
     <div className="parent h-screen">
-      <div className="child flex flex-col items-center justify-center gap-4">
-        <h2 className="text-4xl font-bold text-center mb-2">
-          Register New Site
-        </h2>
-        <div className="card flex items-start justify-center gap-4">
+      <div className="child flex flex-col items-center  gap-4">
+
+      <Header link="/dashboard" btnText="Dashboard" title="Register New Site"/>
+       
+        <div className="card flex items-start justify-center gap-4 mt-10">
           <form
             onSubmit={handleSubmit}
             className=" flex flex-col gap-4 items-center w-[600px]"

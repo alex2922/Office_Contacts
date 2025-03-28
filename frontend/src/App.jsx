@@ -5,8 +5,23 @@ import Allcontacts from './pages/Allcontacts';
 import NotFound from './pages/NotFound';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-
+import { useEffect } from 'react';
+import AOS from 'aos';
 function App() {
+
+useEffect(() => {
+  AOS.init({
+    offset: 200,
+    duration: 600,
+    easing: 'ease-in-sine',
+    delay: 100,
+  });
+  AOS.refresh();
+}, []);
+
+
+
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+
 const Login = () => {
 
     const [data , setData] = useState({
@@ -9,13 +11,18 @@ const Login = () => {
         visible: false
     });
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         setData({...data, [e.target.name]: e.target.value});
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
+        // For demo purposes, we'll just set a dummy token
+        // In a real app, you would validate credentials with your backend
+        localStorage.setItem("token", "dummy-token");
+        navigate("/dashboard");
     }
   return (
     <div className='parent h-screen'>
