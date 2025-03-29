@@ -1,29 +1,31 @@
-const express = require('express');
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import http from "http";
+import { checkConnection } from "./database/config.js"; 
+
+dotenv.config();
 
 const app = express();
+app.use(cors());
+app.use(express.json());
+
+const port = process.env.PORT || 5000;
+const server = http.createServer(app);
 
 
-const posts = [
-    {
-        id: 1,
-        title: 'First Post',
-        username: 'John Doe',
-        content: 'This is the first post'
-    },
-    {
-        id: 2,
-        title: 'Second Post',
-        username: 'Jane Doe',
-        content: 'This is the second post'
+
+const startServer = async () => {
+    try {
+        await checkConnection(); 
+        
+        server.listen(port, () => {
+            console.log(`🚀 Server is running on port ${port}`);
+        });
+    } catch (error) {
+        console.error("❌ Server startup failed:", error);
+        process.exit(1); 
     }
-]
+};
 
-
-app.get('/post', (req, res) => {
-    res.json(posts);
-});
-
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+startServer();
