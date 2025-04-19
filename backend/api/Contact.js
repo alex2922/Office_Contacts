@@ -76,34 +76,18 @@ contactRouter.post("/addContact", async (req, res) => {
 
     const userEmailId = useremail[0].email;
 
-
-
     const messageformat = `
-      <div>
-        <h2>
-        ${name || fname} ${lname || ""} 
+     name :${name || `${fname || ""} ${lname || ""}`.trim()}
+Phone: ${number || ""}
+Email: ${email || ""}
+message:${message ? `Message: ${message}` : ""}
+${paylaodData.option1 ? `${paylaodData.option1}: ${option1 || ""}` : ""}
+${paylaodData.option2 ? `${paylaodData.option2}: ${option2 || ""}` : ""}
+`;
 
-        </h2>
-        <p>${number || ""}</p>
-        <p>${email || ""}</p>
-        <p>
-        ${message || ""}
-        </p>
-        <p>
-        ${option1 || ""}
-        </p>
-
-        <p>
-        ${option2 || ""}  
-        </p>
-        </p>
-
-      </div>
-    `;
-
-   const messageresponse = await sendMail(userEmailId, messageformat);
-console.log(userEmailId)
-   console.log(messageresponse.message)
+    const messageresponse = await sendMail(userEmailId, messageformat);
+    console.log(userEmailId);
+    console.log(messageresponse.message);
 
     return res.status(200).json({
       message: "contact add successfully",
