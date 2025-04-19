@@ -1,5 +1,6 @@
 import express from "express";
 import { database } from "../database/database.js";
+import { sendMail } from "../utils/nodemailer.js";
 
 export const contactRouter = express.Router();
 
@@ -67,6 +68,42 @@ contactRouter.post("/addContact", async (req, res) => {
     )}) VALUES (${feilds.map(() => "?").join(", ")})`;
 
     await database.query(sql, values);
+
+    const [useremail] = await database.query(
+      `SELECT email FROM users WHERE userId=?`,
+      [userId]
+    );
+
+    const userEmailId = useremail[0].email;
+
+
+
+    const messageformat = `
+      <div>
+        <h2>
+        ${name || fname} ${lname || ""} 
+
+        </h2>
+        <p>${number || ""}</p>
+        <p>${email || ""}</p>
+        <p>
+        ${message || ""}
+        </p>
+        <p>
+        ${option1 || ""}
+        </p>
+
+        <p>
+        ${option2 || ""}  
+        </p>
+        </p>
+
+      </div>
+    `;
+
+   const messageresponse = await sendMail(userEmailId, messageformat);
+console.log(userEmailId)
+   console.log(messageresponse.message)
 
     return res.status(200).json({
       message: "contact add successfully",
@@ -141,8 +178,6 @@ contactRouter.get("/getAllContacts", async (req, res) => {
     const [response] = await database.query(
       `SELECT * FROM contactsData ORDER BY userid, created_at`
     );
-  
-
 
     const groupedByUserId = response.reduce((acc, row) => {
       const userId = row.userid || "unknown"; // Default to "unknown" if userId is null or undefined
