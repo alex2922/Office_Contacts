@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { checkConnection } from "./database/database.js";
 import { createtables } from "./tables/Table.js";
 import { userRouter } from "./api/User.js";
+import { contactRouter } from "./api/Contact.js";
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ app.get("/", (req,res)=>{
 })
 
 app.use("/api/user", userRouter)
-
+app.use("/api/contact", contactRouter)
 try {
 
     await checkConnection();

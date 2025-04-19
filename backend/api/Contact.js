@@ -1,0 +1,136 @@
+import express from "express";
+import { database } from "../database/database.js";
+
+export const contactRouter = express.Router();
+
+contactRouter.post("/addContact", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const { name, fname, lname, number, email, message, option1, option2 } =
+      req.body;
+
+    if (!userId) {
+      return res.status(400).json({
+        message: "userid is required",
+      });
+    }
+
+    const [payload] = await database.query(
+      `SELECT * FROM paylaods WHERE userId=?`,
+      [userId]
+    );
+
+    const paylaodData = payload[0];
+
+    const feilds = ["userId"];
+    const values = [userId];
+
+    if (paylaodData.NameInput) {
+      feilds.push("fname", "lname");
+      values.push(fname || null, lname || null);
+    }
+
+    if (!paylaodData.NameInput) {
+      feilds.push("name");
+      values.push(name || null);
+    }
+
+    if (paylaodData.PhoneInput) {
+      feilds.push("number");
+      values.push(number || null);
+    }
+
+    if (paylaodData.EmailInput) {
+      feilds.push("email");
+      values.push(email || null);
+    }
+
+    if (message !== undefined) {
+      feilds.push("message");
+      values.push(message || null);
+    }
+
+    if (paylaodData.option1) {
+      const option1Value = req.body[paylaodData.option1] || null;
+      feilds.push("option1");
+      values.push(option1Value);
+    }
+
+    if (paylaodData.option2) {
+      const option2Value = req.body[paylaodData.option2] || null;
+      feilds.push("option2");
+      values.push(option2Value);
+    }
+
+    const sql = `INSERT INTO contactsData (${feilds.join(
+      ", "
+    )}) VALUES (${feilds.map(() => "?").join(", ")})`;
+
+    await database.query(sql, values);
+
+    return res.status(200).json({
+      message: "contact add successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+contactRouter.get("/getContacts", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({
+        message: "userId is required",
+      });
+    }
+
+    const [response] = await database.query(
+      `SELECT * FROM contactsData WHERE userId = ?`,
+      [userId]
+    );
+
+    const [payload] = await database.query(
+      `SELECT * FROM paylaods WHERE userId = ?`,
+      [userId]
+    );
+
+    const paydata = payload[0];
+    const { option1, option2 } = paydata;
+
+    const mappedData = response.map((item) => {
+      const obj = {
+        id: item.id,
+        name: item.name || null,
+        fname: item.fname || null,
+        lname: item.lname || null,
+        number: item.number,
+        email: item.email,
+        message: item.message,
+      };
+
+      // Add dynamic key for option1
+      if (option1) {
+        obj[option1] = item.option1 || null;
+      }
+
+      // Add dynamic key for option2
+      if (option2) {
+        obj[option2] = item.option2 || null;
+      }
+
+      return obj;
+    });
+
+    return res.status(200).json({
+      message: "success",
+      data: mappedData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
