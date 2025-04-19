@@ -134,3 +134,34 @@ contactRouter.get("/getContacts", async (req, res) => {
     });
   }
 });
+
+contactRouter.get("/getAllContacts", async (req, res) => {
+  try {
+    // Fetch contacts data from the database
+    const [response] = await database.query(
+      `SELECT * FROM contactsData ORDER BY userid, created_at`
+    );
+  
+
+
+    const groupedByUserId = response.reduce((acc, row) => {
+      const userId = row.userid || "unknown"; // Default to "unknown" if userId is null or undefined
+      if (!acc[userId]) {
+        acc[userId] = [];
+      }
+      acc[userId].push(row);
+      return acc;
+    }, {});
+
+    // Return the grouped data with a success message and status 200
+    return res.status(200).json({
+      message: "success",
+      data: groupedByUserId,
+    });
+  } catch (error) {
+    // Return an error message and status 500 if something goes wrong
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
