@@ -24,19 +24,19 @@ userRouter.post("/addUser", async (req, res) => {
     }
 
     connection = await database.getConnection();
-
+const unqiueId = uuidv4()
     await connection.beginTransaction();
 
     const [user] = await connection.query(
-      `INSERT INTO users (email,password,domain) VALUES (?,?,?)`,
-      [email, password, domain]
+      `INSERT INTO users (userId,email,password,domain) VALUES (?,?,?,?)`,
+      [unqiueId,email, password, domain]
     );
     const userId = user.insertId;
 
     const [payload] = await connection.query(
       `INSERT INTO paylaods (userId,NameInput,PhoneInput,EmailInput,emailNotification,option1,option2) VALUES (?,?,?,?,?,?,?)`,
       [
-        userId,
+        unqiueId,
         NameInput,
         PhoneInput,
         EmailInput,
@@ -85,8 +85,8 @@ userRouter.get("/getUser", async (req, res) => {
         payload.option2 
       FROM users AS u
       INNER JOIN paylaods AS payload 
-        ON u.id = payload.userId 
-      WHERE u.id = ?`,
+        ON u.userId = payload.userId 
+      WHERE u.userId = ?`,
       [userId]
     );
 
