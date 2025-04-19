@@ -100,3 +100,34 @@ userRouter.get("/getUser", async (req, res) => {
     });
   }
 });
+
+
+// login 
+
+userRouter.post("/login", async (req,res)=>{
+  try {
+    const {email,password} = req.body;
+    if(!email || !password){
+      return res.status(400).json({
+        message:"email and password are requried"
+      })
+    }
+
+    const [user] = await database.query(`SELECT * FROM users WHERE email =? AND password=?`,[email,password]);
+
+    if(user.length === 0){
+      return res.status(400).json({
+        message:"user not regitserd"
+      })
+    }
+
+    return res.status(200).json({
+      message:"user login successfully",
+      details:user[0]
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message
+    })
+  }
+})
