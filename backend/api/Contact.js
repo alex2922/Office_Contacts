@@ -74,20 +74,26 @@ contactRouter.post("/addContact", async (req, res) => {
 
     const userEmailId = useremail[0].email;
 
-    if(paylaodData.emailNotification === 1){
+    if (paylaodData.emailNotification === 1) {
       const messageformat = `
       Name :${name || `${fname || ""} ${lname || ""}`.trim()}
       Phone: ${number || ""}
       Email: ${email || ""}
       Message:${message || ""}
-      ${paylaodData.option1 ? `${paylaodData.option1}: ${option1Value || ""}` : ""}
-      ${paylaodData.option2 ? `${paylaodData.option2}: ${option2Value || ""}` : ""}
+      ${
+        paylaodData.option1
+          ? `${paylaodData.option1}: ${option1Value || ""}`
+          : ""
+      }
+      ${
+        paylaodData.option2
+          ? `${paylaodData.option2}: ${option2Value || ""}`
+          : ""
+      }
       `;
-      
-          await sendMail(userEmailId, messageformat);
+
+      await sendMail(userEmailId, messageformat);
     }
-
-
 
     return res.status(200).json({
       message: "contact add successfully",
@@ -158,21 +164,23 @@ contactRouter.get("/getContacts", async (req, res) => {
 
 contactRouter.get("/getAllContacts", async (req, res) => {
   try {
+    const { userId } = req.query;
 
-    const {userId} = req.query;
-
-    if(!userId){
+    if (!userId) {
       return res.status(400).json({
-        message:"userid is requried"
-      })
+        message: "userid is requried",
+      });
     }
 
-    const [user] = await database.query(`SELECT role FROM users WHERE userId=?`,[userId]);
+    const [user] = await database.query(
+      `SELECT role FROM users WHERE userId=?`,
+      [userId]
+    );
 
-    if(user[0].role !== "admin"){
+    if (user[0].role !== "admin") {
       return res.status(400).json({
-        message:"you are not admin"
-      })
+        message: "you are not admin",
+      });
     }
 
     // Fetch contacts data from the database
