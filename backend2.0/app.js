@@ -2,6 +2,9 @@ import  express from 'express';
 import  cors from 'cors';
 import { methods } from "express/lib/utils.js";
 
+import authRouter from "./src/routes/authRoute.js";
+import contactRouter from './src/routes/contactRoute.js';
+
 
 const app = express()
 
@@ -19,6 +22,15 @@ app.use(express.urlencoded({extended: true}));
 app.get('/' , (req, res) =>{
   res.send("working...!")
 })
+
+app.get('/api/auth/test', (req, res) => {
+  res.json({ message: 'Auth router test endpoint' });
+});
+
+
+app.use('/api/auth', authRouter)
+app.use('/api/contact', contactRouter)
+
 
 
 
