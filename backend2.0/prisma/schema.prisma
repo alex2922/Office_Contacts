@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum Name{
+  SPLIT
+  SINGLE
+}
+
+
+model User {
+  id                String    @id @default(uuid())
+  userName          String    @unique
+  password          String
+  role              Role      @default(CLIENT)
+  domainAddress     String
+  nameInputStyle    Name      @default(SINGLE)
+  phoneInput        Boolean   @default(false)
+  emailNotification Boolean @default(false)
+  option1           Boolean @default(false)
+  option1Name       String?
+  option2           Boolean @default(false)
+  option2Name       String?
+  option3           Boolean @default(false)
+  option3Name       String?
+  apiKey            String
+  isDeleted         Boolean  @default(false)
+  deletedAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLoginAt       DateTime?
+  loginAttempts     Int      @default(0)
+  isLocked          Boolean  @default(false)
+  lockUntil         DateTime?
+
+
+  contacts         Contacts[]
+}
+
+
+model Contacts {
+  id               String   @id @default(uuid())
+  name             String
+  fristName        String?
+  lastName         String?
+  email            String?
+  message          String?
+  phone            String?
+  option1          String?
+  option2          String?
+  option3          String?
+
+
+  userId           String
+  user             User    @relation(fields: [userId], references: [id])
+}
