@@ -3,8 +3,7 @@ import nodemailer from "nodemailer";
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_APP_PASSWORD:', process.env.EMAIL_APP_PASSWORD);
+
 
 const validateApiKey = async (req, res) => {
     const apiKey = req.headers.authorization;
